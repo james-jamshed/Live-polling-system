@@ -16,7 +16,7 @@ export default function Home() {
 
       <button
         onClick={() => {
-          sessionStorage.removeItem('studentName'); // ✅ Clear name before entering
+          sessionStorage.removeItem('studentName'); 
           navigate('/student');
         }}
         className="bg-green-600 text-white px-6 py-2 rounded"
