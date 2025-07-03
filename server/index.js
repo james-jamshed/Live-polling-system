@@ -13,18 +13,26 @@ connectDB();
 const app = express();
 const server = http.createServer(app);
 
+
+const allowedOrigins = process.env.ALLOWED_ORIGINS.split(',');
+
+
+app.use(cors({
+  origin: allowedOrigins,
+  credentials: true,
+}));
+
+app.use(express.json());
+app.use('/api/polls', pollRoutes);
+
+
 const io = new Server(server, {
   cors: {
-    origin: 'http://localhost:5173',
+    origin: allowedOrigins,
     methods: ['GET', 'POST'],
     credentials: true,
   },
 });
-
-app.use(cors());
-app.use(express.json());
-app.use('/api/polls', pollRoutes);
-
 
 socketManager(io);
 
