@@ -1,4 +1,4 @@
-// === FILE: client/src/pages/StudentDashboard.jsx ===
+
 import { useEffect, useState } from "react";
 import { useSocket } from "../context/SocketContext";
 import ChatPopup from "../components/ChatPopup";
@@ -75,18 +75,24 @@ export default function StudentDashboard() {
 
   if (!entered) {
     return (
-      <div className="flex flex-col items-center justify-center h-screen space-y-4">
+      <div className="flex flex-col items-center justify-center h-screen space-y-4 bg-white">
+        <h1 className="text-3xl font-bold mb-4">Let’s Get Started</h1>
+        <p className="text-center mb-6">
+          If you’re a student, you’ll be able to submit your answers,
+          participate in live polls, and see how your responses compare
+          with your classmates.
+        </p>
         <input
-          placeholder="Enter your name"
+          placeholder="Enter your Name"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          className="border px-4 py-2 rounded"
+          className="border px-4 py-2 rounded w-80"
         />
         <button
           onClick={handleEnter}
-          className="bg-green-600 text-white px-4 py-2 rounded"
+          className="bg-purple-600 text-white px-6 py-2 rounded mt-4"
         >
-          Join Poll
+          Continue
         </button>
       </div>
     );
@@ -95,14 +101,11 @@ export default function StudentDashboard() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-white px-4">
       <div className="w-full max-w-xl">
-        <div className="relative h-screen">
+   
           <h2 className="text-xl font-bold mb-4 absolute top-4 left-4">
-            Welcome, {name}
+            Welcome, {name}, Wait for the teacher to ask question...
           </h2>
-          <h2 className="text-xl font-bold text-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-            Wait for the teacher to ask question...
-          </h2>
-        </div>
+        
         {poll && !results && (
           <div className="bg-white p-4 rounded border shadow-md">
             <div className="flex justify-between items-center mb-2">

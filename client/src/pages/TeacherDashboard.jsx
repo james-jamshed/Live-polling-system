@@ -1,5 +1,3 @@
-// === FILE: client/src/pages/TeacherDashboard.jsx ===
-
 import { useState, useEffect } from 'react';
 import { useSocket } from '../context/SocketContext';
 import ChatPopup from '../components/ChatPopup';
@@ -8,7 +6,7 @@ export default function TeacherDashboard() {
   const socket = useSocket();
 
   const [question, setQuestion] = useState('');
-  const [options, setOptions] = useState(['', '']); // ✅ added missing options state
+  const [options, setOptions] = useState(['', '']);
   const [correct, setCorrect] = useState([false, false]);
   const [timer, setTimer] = useState(60);
   const [results, setResults] = useState(null);
