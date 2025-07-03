@@ -1,21 +1,17 @@
-import { useState } from "react";
-import HomePage from "./components/HomePage";
-import StudentPage from "./components/StudentPage";
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import StudentDashboard from "./pages/StudentDashboard";
+import TeacherDashboard from "./pages/TeacherDashboard";
+import Home from "./pages/Home";
 
-
-const App = () => {
-  const [role, setRole] = useState(null);
-  const [studentName, setStudentName] = useState(null);
-
-  if (!role) return <HomePage onContinue={setRole} />;
-   if (role === "student" && !studentName) return <StudentPage onSubmit={setStudentName} />;
-
-
+export default function App() {
   return (
-    <div>
-      {role === "student" ? <StudentUI /> : <TeacherUI />}
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/teacher" element={<TeacherDashboard />} />
+        <Route path="/student" element={<StudentDashboard />} />
+      </Routes>
+    </Router>
   );
-};
-
-export default App;
+}

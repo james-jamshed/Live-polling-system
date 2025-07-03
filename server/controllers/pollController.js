@@ -1,39 +1,38 @@
 const Poll = require('../models/Poll');
 
-// GET all polls (latest first)
-const getAllPolls = async (req, res) => {
-  try {
-    const polls = await Poll.find().sort({ createdAt: -1 });
-    res.status(200).json(polls);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
+let currentPoll = null;
+let answeredStudents = new Set();
+
+exports.handleCreatePoll = (io, data) => {
+  currentPoll = {
+    question: data.question,
+    options: data.options,
+    answers: {},
+    time: data.time || 60,
+  };
+  answeredStudents = new Set();
+
+  io.emit('new_poll', currentPoll);
+
+  setTimeout(() => {
+    io.emit('poll_results', currentPoll.answers);
+    const newPoll = new Poll({
+      question: currentPoll.question,
+      answers: currentPoll.answers,
+    });
+    newPoll.save();
+    currentPoll = null;
+  }, currentPoll.time * 1000);
 };
 
-// GET a single poll by ID
-const getPollById = async (req, res) => {
-  try {
-    const poll = await Poll.findById(req.params.id);
-    if (!poll) return res.status(404).json({ message: 'Poll not found' });
-    res.status(200).json(poll);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
+exports.handleSubmitAnswer = (io, { name, answer }) => {
+  if (!currentPoll || answeredStudents.has(name)) return;
+
+  currentPoll.answers[answer] = (currentPoll.answers[answer] || 0) + 1;
+  answeredStudents.add(name);
+
 };
 
-// POST create a new poll manually (not via socket)
-const createPoll = async (req, res) => {
-  try {
-    const { question, options } = req.body;
-    const newPoll = await Poll.create({ question, options, results: {} });
-    res.status(201).json(newPoll);
-  } catch (error) {
-    res.status(400).json({ message: error.message });
-  }
-};
-
-module.exports = {
-  getAllPolls,
-  getPollById,
-  createPoll,
+exports.handleKickStudent = (io, name) => {
+  io.emit('kick_student', name);
 };
